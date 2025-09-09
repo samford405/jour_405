@@ -1,24 +1,25 @@
 ---
-title: "HW1: R Basics"
+  title: "HW1: R Basics"
 ---
-
-## Getting Started with R
-## Task One: R Overview & Preliminaries
-
-In this task, you will learn about the R programming language and write basic R commands. This will make a lot more sense after you read https://r4ds.hadley.nz/workflow-basics.html. Put your code inside the empty blocks and run them to see the result. Save often!
-
-### Basic R Commands
-
-### 1.1: Assignments in R
-
-## Assign x to 1, y to 2 and z to 3
-
-Put your code inside the block below, then click the green arrow to run your code.
+  
+  ## Getting Started with R
+  ## Task One: R Overview & Preliminaries
+  
+  In this task, you will learn about the R programming language and write basic R commands. This will make a lot more sense after you read https://r4ds.hadley.nz/workflow-basics.html. Put your code inside the empty blocks and run them to see the result. Save often!
+  
+  ### Basic R Commands
+  
+  ### 1.1: Assignments in R
+  
+  ## Assign x to 1, y to 2 and z to 3
+  
+  Put your code inside the block below, then click the green arrow to run your code.
 
 ```{r}
-x <- 1
-y <- 2
-z <- 3
+x<-1
+y<-2
+z<-3
+
 ```
 
 ### 1.2: Functions
@@ -29,6 +30,7 @@ A function is code that produces some result, like printing. The function for pr
 
 ```{r}
 print("Hello World")
+
 ```
 
 ## Have R print the number 42
@@ -45,6 +47,7 @@ R can do math, too, which is very necessary for statistics. Let's have it - not 
 
 ```{r}
 17 + 5
+
 ```
 
 ## Add 5 to x (remember x from above?)
@@ -91,7 +94,7 @@ We'll be using different tools in order to work with data and generate statistic
 ## Load the tidyverse
 
 ```{r}
-library(tidyverse)
+libary(tidyverse)
 
 ```
 
@@ -103,8 +106,8 @@ Data frames are how R stores tabular data, like a spreadsheet. In this task, you
 ## Load some CSV data
 
 One thing we'll do a lot in this class is load some CSV data using the `read_csv()` function that the tidyverse provides. Follow along here: https://r4ds.hadley.nz/data-import and put the code below that loads the students.csv file from the URL provided:
-
-```{r}
+  
+  ```{r}
 students <- read_csv("https://rpos.it/r4ds-students-csv")
 
 ```
