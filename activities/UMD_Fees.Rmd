@@ -62,6 +62,8 @@ umd_fees |>
 
 Write a few sentences about what you found in the data. What's the story here?
 
+Something interesting I found interesting about the data set was that athletics was able to keep a zero percent change while student Sustainability had a 150 percent change. so it raises questions like why did it change? Whats caused it to change overtime? Which would make me look at other numbers like class sizes over years and thins such as that.
+
 
 
 
