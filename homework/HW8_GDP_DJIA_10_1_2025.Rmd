@@ -102,6 +102,7 @@ DJIA_data|>
   ggplot() +
   geom_point(aes(x=DJIA,y=GDP)) +
   geom_smooth(aes(x=DJIA, y=GDP))
+labs(title="DJIA vs GDP")
 ```
 
 ### Task 5: Describe our results
