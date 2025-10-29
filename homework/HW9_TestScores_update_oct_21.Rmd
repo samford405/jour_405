@@ -118,7 +118,7 @@ Alternative: The new reading program will keep numbers the same
 
 ```{r}
 # Set the significance level for your test
-alpha_level <- 72.6 # Replace with the appropriate value
+alpha_level <- 0.05 # Replace with the appropriate value
 
 # Perform a one-sample t-test
 # Since we want to know if scores improved (increased), we use a one-sided test (alternative = "greater")
