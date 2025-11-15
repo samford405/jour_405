@@ -1,0 +1,112 @@
+---
+title: "final_project"
+output: html_document
+date: "2025-11-14"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+The data for this project comes from the Billboard Hot 100 Dataset, which tracks weekly chart performance for popular music in the United States. It includes metadata about songs such as title, artist, release year, chart ranking, peak position, and weeks on the chart.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r}
+library(tidyverse)
+
+billboard <- read_csv("Billboard Hot 100 Number Ones Database - Data.csv")
+glimpse(billboard)
+summary(billboard)
+
+
+```
+
+##3What the Dataset Contains
+
+The Billboard Hot 100 data includes:
+
+- **Song,Artist** (title, artist, producers)
+- **Chart performance** (peak position, weeks on chart, year)
+- **Date variables** (entry date, chart week)
+- **Identifiers** (key notes, danciness, vocals)
+
+To view summary statistics:
+
+```{r}
+summary(billboard)
+```
+
+To check the total rows/columns:
+
+```{r}
+dim(billboard)
+```
+
+# 4. Important Columns for This Analysis
+
+For a project about “what makes a hit song,” the following variables matter most:
+
+- **title** — identifies the song  
+- **artist** — identifies the creator  
+- **peak_position** — best chart rank (indicator of success)  
+- **weeks_on_chart** — endurance of the song  
+- **year** — needed for year-to-year trend analysis  
+- **genre** — if included, helps analyze which genres perform well  
+
+These variables allow us to measure success and compare across time periods.
+
+---
+
+# 5. What’s Missing From the Dataset
+
+Some useful information that is not included or may be missing:
+
+- **Marketing / promotion data**  
+- **Streaming vs. radio vs. sales breakdown**  
+- **Social media virality metrics**  
+
+These limitations may restrict certain types of story ideas.
+
+---
+
+# 6. Basic Descriptive Statistics  
+Using *weeks_on_chart* as the selected variable:
+
+```{r}
+billboard|>
+ summarize(
+    mean_weeks   = mean(`Weeks at Number One`, na.rm = TRUE),
+    median_weeks = median(`Weeks at Number One`, na.rm = TRUE),
+    min_weeks    = min(`Weeks at Number One`, na.rm = TRUE),
+    max_weeks    = max(`Weeks at Number One`, na.rm = TRUE)
+  )
+```
+
+These values show how long the average song lasts on the Hot 100 compared with the longest-lasting and shortest-lasting records.
+
+---
+
+# 7. Hypotheses and Newsworthy Questions
+
+Below are hypotheses that can be tested using Billboard data:
+
+### **Hypothesis 1:**  
+Songs that peak at Number 1 stay on the chart significantly longer than songs that peak below the Top 10.
+
+### **Hypothesis 2:**  
+Hit songs have become shorter over time (compare average song length by year, if length is available).
+
+### **Hypothesis 3:**  
+Hip-hop and R&B dominate the Hot 100 more in the streaming era (2015–present) compared to earlier decades.
+
+### **Hypothesis 4:**  
+Certain artists or record labels have disproportionate chart success (possible industry concentration story).
+
+### **Hypothesis 5:**  
+The number of weeks a song stays in the Top 10 has increased over time due to streaming.
+
+---
+
