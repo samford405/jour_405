@@ -15,6 +15,7 @@ The data for this project comes from the Billboard Hot 100 Dataset, which tracks
 When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
 
 ```{r}
+install.packages("tidyverse")
 library(tidyverse)
 
 billboard <- read_csv("Billboard Hot 100 Number Ones Database - Data.csv")
@@ -109,4 +110,65 @@ Certain artists or record labels have disproportionate chart success (possible i
 The number of weeks a song stays in the Top 10 has increased over time due to streaming.
 
 ---
+z score
+```{r}
+billboardz <- billboard |>
+  mutate(
+    z_weeks = (`Weeks at Number One` - mean(`Weeks at Number One`, na.rm = TRUE)) /
+              sd(`Weeks at Number One`, na.rm = TRUE)
+  )
+```
+"A positive z-score means a song stayed at #1 longer than usual, while a negative z-score means it didn’t last as long. For example, a song with a z-score of 2 stayed on top much longer than most other hits. This makes it easy to spot songs that were real chart dominators versus those that barely hung on at #1."
+##Ttest
+```{r}
 
+# Convert the column to numeric (fixes all errors)
+billboard$`Weeks at Number One` <- as.numeric(billboard$`Weeks at Number One`)
+
+# 1. Calculate the median
+median_weeks <- median(billboard$`Weeks at Number One`, na.rm = TRUE)
+
+# 2. Create Long Run vs Short Run groups
+billboard <- billboard |>
+  mutate(
+    run_type = ifelse(`Weeks at Number One` >= median_weeks,
+                      "Long Run",
+                      "Short Run")
+  )
+
+# 3. Pull the groups
+group1 <- billboard |>
+  filter(run_type == "Long Run") |>
+  pull(`Weeks at Number One`)
+
+group2 <- billboard |>
+  filter(run_type == "Short Run") |>
+  pull(`Weeks at Number One`)
+
+# 4. Run the t-test
+t_test_result <- t.test(group1, group2)
+t_test_result
+
+
+```
+"For the Ttest compared songs that stayed at #1 for a long time (“Long Run”) to those that didn’t stay as long (“Short Run”). The t-test shows a clear difference between the two groups: songs in the Long Run group stayed on the chart significantly longer than the Short Run songs. In other words, some #1 hits dominate the charts for weeks, while others hit the top but fall off more quickly. This confirms that there’s real variation in how long songs stay at the top spot"
+
+##data chart
+```{r}
+billboard |>
+  group_by(run_type) |>
+  summarize(
+    avg_weeks = mean(`Weeks at Number One`, na.rm = TRUE)
+  ) |>
+  ggplot(aes(x = run_type, y = avg_weeks, fill = run_type)) +
+  geom_col() +
+  labs(
+    title = "Average Weeks at #1: Long Run vs Short Run Songs",
+    x = "Run Type",
+    y = "Average Weeks at Number One"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+```
+"The bar chart shows the average weeks at #1 for Long Run versus Short Run songs. Long Run hits clearly stay on top much longer, while Short Run hits drop off more quickly. It’s an easy way to see how not all #1 songs dominate the charts equally."
