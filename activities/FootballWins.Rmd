@@ -2,6 +2,7 @@
 ---
 title: "Multiple Regression Analysis in R"
 date: 8-24-2025
+name:San Ford
 ---
 
 # Introduction
@@ -46,7 +47,7 @@ The coefficients tell us the estimated effect of each independent variable on th
 *   **Takeaways**: The coefficient is 0.150593, suggesting that each additional takeaway is associated with an increase in wins by about 0.151, which is near the threshold of significance (p = 0.07928). This suggests a potentially meaningful, though not conventionally statistically significant, positive effect on wins.
 *   **Points Scored**: The coefficient is 0.038732, which is significant (p = 0.00665). This indicates that each additional point scored is associated with an increase in wins by about 0.039, suggesting a clear and meaningful impact.
 
-### Model Fit (3 points)
+### Model Fit
 
 *   **Residual Standard Error**: The RSE of 2.072 tells us that the typical prediction by the model deviates from the actual number of wins by about 2.072 wins.
 *   **Multiple R-squared**: 0.6232 indicates that about 62.32% of the variability in wins is explained by the model, which is relatively high, suggesting a good fit.
@@ -55,7 +56,7 @@ The coefficients tell us the estimated effect of each independent variable on th
 
 Is this a useful model, based on what you've seen? Why?
 
-ANSWER HERE
+Yes because it shows a real indicator of whats useful and whats not when its come to these football stats.
 
 ## Correlation Analysis
 
@@ -75,14 +76,16 @@ corr_matrix <- cor(selected_vars)
 corrplot(corr_matrix, method = "circle")
 ```
 
-## Results Interpretation (4 points)
+## Results Interpretation
 
 The results from our correlation analysis show the strength of the relationships between the number of wins and factors like yards gained, takeaways, and points scored. High positive correlations indicate strong relationships where increases in one variable are associated with increases in another. Conversely, negative correlations suggest an inverse relationship. By understanding these dynamics, journalists can better explain the factors that contribute to a team's success or failure in a season.
 
 Which of these three factors - Yards Gained, Takeaways and Points Scored - have the most impact on wins? Are there any that do not seem impactful at all?
 
-ANSWER HERE
+ANSWER HERE: Points Scored has the strongest impact on wins—teams that score more consistently see the biggest jump in their chances of winning. Yards Gained is still meaningful, but its effect is smaller since moving the ball doesn’t always translate directly into points. Takeaways show the weakest influence overall and don’t appear to meaningfully change win totals in this dataset.
 
-## Using the Model (3 points)
+## Using the Model
 
 Without using the words "multiple regression model", describe how you could use this model to cover a team or game.
+
+You could analyze a team or game by looking at several factors at the same time to predict an outcome or explain a trend. For example, instead of only focusing on points scored, you could include things like turnovers, shooting percentage, pace of play, and player efficiency. By examining how each of these variables contributes when they’re all considered together, you can estimate which ones actually drive success.
