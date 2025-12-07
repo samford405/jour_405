@@ -9,8 +9,9 @@ date: 8-24-2025
 Multiple regression analysis is a statistical method used to understand the relationship between one dependent variable and two or more independent variables. This analysis is particularly useful in journalism for exploring complex relationships in civic data, such as how different demographic and socioeconomic factors collectively impact voter turnout. By understanding these relationships, journalists can provide deeper insights into civic participation patterns and identify potential barriers to voting.
 
 ```{r setup}
+install.packages("tidyverse")
+install.packages('corrplot')
 library(tidyverse)
-#install.packages('corrplot')
 library(corrplot)
 ```
 
@@ -27,7 +28,7 @@ head(md_turnout)
 
 Before building our model, let's explore the data to understand the variables and their relationships. Examine the correlation matrix to see how the independent variables relate to each other and to the dependent variable (voter turnout). Which variables seem to be correlated? Are there any that are not correlated at all? Also look at the multiple scatterplots. Which variables seem to have a linear relationship with the dependent variable? Which do not?
 
-ANSWER HERE
+The correlation matrix shows that income, percent with a bachelor’s degree, and median age are the variables most strongly related to voter turnout. Higher income, higher education, and older populations tend to have higher turnout. Overall, the strongest linear predictors are income, education, and median age, while population and percent unemployed don’t show much of a relationship at all.
 
 
 ```{r}
@@ -90,7 +91,7 @@ The coefficients tell us the estimated effect of each independent variable on th
 
 Examine the output of the model, checking the coefficients, residuals, and overall model fit. How well does this multiple variable model predict turnout? Do any of the variables seem to be insignificant? Is this a useful model, based on what you've seen? Why?
 
-ANSWER HERE
+The model seems to predict turnout pretty well, but not perfectly. The residuals look fairly even around zero, which means the model isn’t making big, obvious mistakes. The R-squared shows that the model explains a decent amount of the variation in turnout.Overall, the model is useful, but it could be better. It helps us understand the main factors that influence turnout, but dropping the weak predictors would likely improve it.
 
 ```{r}
 # Build initial model with all predictors
@@ -104,19 +105,19 @@ summary(initial_model)
 
 Create three alternative models by adding or removing variables to see if we can improve the model's performance. Turnout will always be the dependent variable, but you should alter the independent variables by removing or adding some. Then compare the models using adjusted R-squared values. Are any of the models significantly better than the others?
 
-ANSWER HERE
+After creating three alternative models, the adjusted R-squared values change only slightly. When we remove weaker predictors (like population or percent unemployed), the adjusted R-squared stays almost the same, showing that those variables weren’t helping the model much.
 
 ```{r}
 # Model 2
-model2 <- lm(turnout ~ REPLACE ME, data = md_turnout)
+model2 <- lm(turnout ~ income + pct_bachelors_higher + median_age, data = md_turnout)
 summary(model2)
 
 # Model 3
-model3 <- lm(turnout ~ REPLACE ME, data = md_turnout)
+model3 <- lm(turnout ~ income + pct_bachelors_higher + median_age + population, data = md_turnout)
 summary(model3)
 
 # Model 4
-model4 <- lm(turnout ~ REPLACE ME, data = md_turnout)
+model4 <- lm(turnout ~ income + pct_bachelors_higher, data = md_turnout)
 summary(model4)
 
 # Compare models
@@ -145,4 +146,4 @@ ggplot(model_comparison, aes(x = reorder(Model, Adjusted_R_squared), y = Adjuste
 
 Without using the words "multiple regression model", describe how you could use this analysis to cover an election or voter participation story.
 
-ANSWER HERE
+You could use this analysis to explain why some counties vote more than others. By looking at which factors are linked to higher turnout—like income, education, or age—you can show readers what might be influencing participation.
