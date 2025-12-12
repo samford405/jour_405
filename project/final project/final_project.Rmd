@@ -95,63 +95,104 @@ These values show how long the average song lasts on the Hot 100 compared with t
 Below are hypotheses that can be tested using Billboard data:
 
 ### **Hypothesis 1:**  
-Songs that peak at Number 1 stay on the chart significantly longer than songs that peak below the Top 10.
+Pop songs that reach the Top 10 have stronger chart performance than non-pop songs that reach the Top 10.
 
+Null Hypothesis (H₀):
+Among Top 10 hits, pop songs and non-pop songs have no difference in their chart performance (measured by total weeks on the Hot 100 or peak position).
+
+Alternate Hypothesis (H₁):
+Among Top 10 hits, pop songs stay on the Hot 100 longer or achieve better peak positions than non-pop Top 10 songs. 
 ### **Hypothesis 2:**  
-Hit songs have become shorter over time (compare average song length by year, if length is available).
+More danceable songs perform better on the Billboard Hot 100.
+
+Null Hypothesis (H₀):
+Danceability has no relationship with chart performance (peak position or total weeks on the chart).
+
+Alternate Hypothesis (H₁):
+Songs with higher danceability scores achieve better chart performance — such as higher peak positions or more weeks on the Hot 100.
 
 ### **Hypothesis 3:**  
-Hip-hop and R&B dominate the Hot 100 more in the streaming era (2015–present) compared to earlier decades.
+Hip-hop and R&B dominate the Hot 100 more in the streaming era.
+
+Operational Definition of “dominate”:
+Hip-hop and R&B songs make up more than 50% of all Hot 100 entries in a given period.
+
+Time periods:
+
+Streaming era: 2015–present
+
+Pre-streaming era: 1980–2014 (or earlier based on your dataset)
+
+Null Hypothesis (H₀):
+Hip-hop/R&B songs do not make up a greater share of Hot 100 entries in the streaming era than before 2015.
+
+Alternate Hypothesis (H₁):
+Hip-hop/R&B songs make up a greater than 50% share of Hot 100 entries in the streaming era, showing increased dominance.
 
 ### **Hypothesis 4:**  
-Certain artists or record labels have disproportionate chart success (possible industry concentration story).
+Songs that contain samples from older recordings perform better on the Billboard Hot 100 than songs that do not use samples.
 
+Null Hypothesis (H₀):
+There is no difference in chart performance between sampled songs and non-sampled songs. Sampling does not improve or worsen chart success.
+
+Alternate Hypothesis (H₁):
+Sampled songs achieve stronger chart performance — such as higher peak positions or more total weeks on the chart — compared to songs that do not include samples.
 ### **Hypothesis 5:**  
-The number of weeks a song stays in the Top 10 has increased over time due to streaming.
+The number of weeks a song spends in the Top 10 has increased in the streaming era.
+
+Null Hypothesis (H₀):
+There is no difference in Top 10 duration before and after 2015.
+
+Alternate Hypothesis (H₁):
+Songs in the streaming era spend more weeks in the Top 10.
 
 ---
 z score
 ```{r}
+# Z-scores for Weeks at Number One
 billboardz <- billboard |>
   mutate(
     z_weeks = (`Weeks at Number One` - mean(`Weeks at Number One`, na.rm = TRUE)) /
               sd(`Weeks at Number One`, na.rm = TRUE)
   )
-```
-"A positive z-score means a song stayed at #1 longer than usual, while a negative z-score means it didn’t last as long. For example, a song with a z-score of 2 stayed on top much longer than most other hits. This makes it easy to spot songs that were real chart dominators versus those that barely hung on at #1."
-##Ttest
-```{r}
 
-# Convert the column to numeric (fixes all errors)
-billboard$`Weeks at Number One` <- as.numeric(billboard$`Weeks at Number One`)
+# Explanation:
+# "A positive z-score means a song stayed at #1 longer than usual,
+# while a negative z-score means it didn’t last as long. 
+# For example, a song with a z-score of 2 stayed on top much longer than most other hits. 
+# This makes it easy to spot songs that were real chart dominators versus those that barely hung on at #1."
 
-# 1. Calculate the median
-median_weeks <- median(billboard$`Weeks at Number One`, na.rm = TRUE)
+## T-test for Danceability
 
-# 2. Create Long Run vs Short Run groups
-billboard <- billboard |>
+# Step 1: Remove NAs for Danceability and Weeks at Number One
+billboard_clean <- billboard |>
+  filter(!is.na(Danceability), !is.na(`Weeks at Number One`))
+
+# Step 2: Create High vs Low Danceability groups based on median
+billboard_clean <- billboard_clean |>
   mutate(
-    run_type = ifelse(`Weeks at Number One` >= median_weeks,
-                      "Long Run",
-                      "Short Run")
+    dance_group = ifelse(Danceability >= median(Danceability, na.rm = TRUE),
+                         "High Danceability",
+                         "Low Danceability")
   )
 
-# 3. Pull the groups
-group1 <- billboard |>
-  filter(run_type == "Long Run") |>
+# Step 3: Pull groups for testing
+high_group <- billboard_clean |>
+  filter(dance_group == "High Danceability") |>
   pull(`Weeks at Number One`)
 
-group2 <- billboard |>
-  filter(run_type == "Short Run") |>
+low_group <- billboard_clean |>
+  filter(dance_group == "Low Danceability") |>
   pull(`Weeks at Number One`)
 
-# 4. Run the t-test
-t_test_result <- t.test(group1, group2)
-t_test_result
+# Step 4: Run the t-test
+dance_t_test <- t.test(high_group, low_group, alternative = "greater")
+dance_t_test
+
 
 
 ```
-"For the Ttest compared songs that stayed at #1 for a long time (“Long Run”) to those that didn’t stay as long (“Short Run”). The t-test shows a clear difference between the two groups: songs in the Long Run group stayed on the chart significantly longer than the Short Run songs. In other words, some #1 hits dominate the charts for weeks, while others hit the top but fall off more quickly. This confirms that there’s real variation in how long songs stay at the top spot"
+"The T-test compared songs with high danceability to those with low danceability in terms of how long they stayed at Number One on the Hot 100. A positive and significant result indicates that songs with higher danceability tend to remain at the top of the chart longer than less danceable songs. This suggests that danceability may play an important role in a song’s commercial success, potentially because more danceable songs are more likely to be streamed, shared, and played in clubs or social settings."
 
 ##data chart
 ```{r}
@@ -172,3 +213,15 @@ billboard |>
 
 ```
 "The bar chart shows the average weeks at #1 for Long Run versus Short Run songs. Long Run hits clearly stay on top much longer, while Short Run hits drop off more quickly. It’s an easy way to see how not all #1 songs dominate the charts equally."
+
+Story Idea:
+Our analysis explores how danceability contributes to a song’s chart success on the Billboard Hot 100. Using T-tests to compare songs with high vs. low danceability, we found that more danceable songs tend to stay at Number One longer than less danceable songs. This suggests that danceability is a measurable factor influencing a song’s popularity and staying power, potentially amplified by streaming platforms, social media sharing, and club or party play.
+
+Main Findings:
+High-danceability songs remain at Number One significantly longer than low-danceability songs.Danceability may act as a predictor for commercial success, independent of genre or artist fame.Visualizations (bar charts and z-scores) make it clear which songs dominated the charts versus those that had brief peaks.
+
+Potential Problems / Limitations:
+Danceability data may not cover all songs or could include missing/incorrect values.Weeks at Number One does not capture songs that performed well overall but never reached #1.Other factors like marketing, social media virality, collaborations, or label support could also influence success and are not included in this analysis.
+
+Reporting Plan:
+Highlight the top high-danceability songs and their chart performance. Include bar charts comparing high vs. low danceability, and z-scores to show extreme performers.Discuss the broader cultural context: how danceable songs dominate TikTok, streaming playlists, and clubs. Interview music producers or DJs (optional) to provide expert commentary on why danceability matters. Conclude with actionable insights for music fans, industry analysts, or emerging artists.
